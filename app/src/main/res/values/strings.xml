@@ -2,20 +2,44 @@
     <string name="app_name">BMICalculation</string>
     <string name="input_the_height_here">Input the height here.</string>
     <string name="input_the_weight_here">Input the weight here.</string>
-    <string name="weight_kg">weight(kg)</string>
+    <string name="weight_kg">Weight (kg)</string>
     <string name="bmi_calculation">BMI Calculation</string>
-    <string name="see_ur_bmi">See ur BMI</string>
-    <string name="height_cm">height(cm)</string>
-    <string name="bmi_result">Your bmi result is </string>
+    <string name="see_ur_bmi">See your BMI</string>
+    <string name="height_cm">Height (cm)</string>
+    <string name="bmi_result">Your BMI result is</string>
     <string name="advice_average">You look great!</string>
     <string name="bmi_picture_for_adult">BMI picture for adult.</string>
     <string name="judge_standard">Judge Standard</string>
-    <string name="adult_18_years_old"><![CDATA[adult(> 18 years old)]]></string>
-    <string name="child_18_years_old"><![CDATA[child(<= 18 years old)]]></string>
-    <string name="choose_the_identity_u_r">Choose the identity u\'r</string>
-    <string name="age">age</string>
-    <string name="gender">gender</string>
+    <string name="adult_18_years_old"><![CDATA[Adult(> 18 years old)]]></string>
+    <string name="child_18_years_old"><![CDATA[Child(<= 18 years old)]]></string>
+    <string name="choose_the_identity_u_r">Choose the identity you're</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-
+    <string name="error_missing_fields">Please input the height, weight, and age.</string>
+    <string name="error_choose_gender">Please choose a gender.</string>
+    <string name="error_positive">Height and weight must be positive.</string>
+    <string name="error_number_format">Please input valid numbers.</string>
+    <string name="error_label">Error: %1$s</string>
+    <string name="menu_wiki">Wikipedia</string>
+    <string name="menu_exit">Exit</string>
+    <string name="menu_header">Actions</string>
+    <string name="report_bmi_value">Your BMI: %1$s</string>
+    <string name="report_category">Category: %1$s</string>
+    <string name="report_details">Height: %1$s cm
+Weight: %2$s kg
+Age: %3$s years
+Gender: %4$s</string>
+    <string name="report_history_title">Recent Records:</string>
+    <string name="report_no_history">No records yet.</string>
+    <string name="view_trend">View BMI Trend</string>
+    <string name="trend_title">BMI Trend</string>
+    <string name="trend_hint">Latest BMI per day will be shown here.</string>
+    <string name="trend_empty">No BMI data yet. Calculate to see your trend.</string>
+    <string name="back_to_report">Back</string>
+    <string name="llm_section_title">AI Health Suggestion</string>
+    <string name="llm_loading">Contacting health assistant…</string>
+    <string name="llm_fallback">Unable to fetch AI advice. Please follow the general tips above.</string>
+    <string name="llm_prompt_template">BMI: %1$.2f, age: %2$d, gender: %3$s</string>
 </resources>

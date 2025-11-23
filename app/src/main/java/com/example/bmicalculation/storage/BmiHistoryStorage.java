@@ -1,29 +1,25 @@
 package com.example.bmicalculation.storage;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import com.example.bmicalculation.model.BmiInput;
 import com.example.bmicalculation.model.BmiRecord;
 import com.example.bmicalculation.model.BmiResult;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class BmiHistoryStorage {
-    private static final int MAX_RECORDS = 10;
     private static final String KEY_HEIGHT = "height";
     private static final String KEY_WEIGHT = "weight";
     private static final String KEY_AGE = "age";
     private static final String KEY_GENDER = "gender";
-    private static final String KEY_BMI = "bmi";
-    private static final String KEY_CATEGORY = "category";
-    private static final String KEY_HISTORY = "bmi_history";
 
     private final SharedPreferences preferences;
+    private final BmiDatabaseHelper databaseHelper;
 
-    public BmiHistoryStorage(SharedPreferences preferences) {
-        this.preferences = preferences;
+    public BmiHistoryStorage(Context context) {
+        this.preferences = context.getSharedPreferences("BMI_Data", Context.MODE_PRIVATE);
+        this.databaseHelper = new BmiDatabaseHelper(context);
     }
 
     public void persistForm(String height, String weight, String age, String gender) {
@@ -44,47 +40,19 @@ public class BmiHistoryStorage {
     }
 
     public void addRecord(BmiInput input, BmiResult result) {
-        try {
-            JSONArray history = new JSONArray(preferences.getString(KEY_HISTORY, "[]"));
-            JSONObject record = new JSONObject();
-            record.put(KEY_HEIGHT, String.valueOf(input.getHeightCm()));
-            record.put(KEY_WEIGHT, String.valueOf(input.getWeightKg()));
-            record.put(KEY_AGE, String.valueOf(input.getAge()));
-            record.put(KEY_GENDER, input.getGender().getDisplayValue());
-            record.put(KEY_BMI, result.getBmiDisplay());
-            record.put(KEY_CATEGORY, result.getCategory());
-
-            history.put(record);
-            if (history.length() > MAX_RECORDS) {
-                JSONArray trimmed = new JSONArray();
-                for (int i = history.length() - MAX_RECORDS; i < history.length(); i++) {
-                    trimmed.put(history.getJSONObject(i));
-                }
-                history = trimmed;
-            }
-            preferences.edit().putString(KEY_HISTORY, history.toString()).apply();
-        } catch (JSONException e) {
-            // Swallow to avoid crashing the flow; history is non-critical.
-        }
+        BmiRecord record = new BmiRecord(
+                String.valueOf(input.getHeightCm()),
+                String.valueOf(input.getWeightKg()),
+                String.valueOf(input.getAge()),
+                input.getGender().getDisplayValue(),
+                String.valueOf(result.getBmiValue()),
+                result.getCategory(),
+                LocalDate.now());
+        databaseHelper.saveRecord(record);
     }
 
     public List<BmiRecord> loadHistory() {
-        List<BmiRecord> records = new ArrayList<>();
-        try {
-            JSONArray history = new JSONArray(preferences.getString(KEY_HISTORY, "[]"));
-            for (int i = 0; i < history.length(); i++) {
-                JSONObject record = history.getJSONObject(i);
-                records.add(new BmiRecord(
-                        record.optString(KEY_HEIGHT),
-                        record.optString(KEY_WEIGHT),
-                        record.optString(KEY_AGE),
-                        record.optString(KEY_GENDER),
-                        record.optString(KEY_BMI),
-                        record.optString(KEY_CATEGORY)));
-            }
-        } catch (JSONException ignored) {
-        }
-        return records;
+        return databaseHelper.loadRecords();
     }
 
     public static class FormState {
