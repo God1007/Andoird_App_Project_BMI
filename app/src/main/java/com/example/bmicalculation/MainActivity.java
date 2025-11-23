@@ -13,6 +13,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText vHeight, vWeight, vAge;
@@ -112,9 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
             double bmi = weight / (height * height);
 
-            // 保存数据到SharedPreferences
-            saveData(heightStr, weightStr, ageStr, gender);
-
             // 根据年龄选择不同的评判标准
             String bmiCategory;
             if (age >= 18) {
@@ -124,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
                 // 儿童标准 (需要根据年龄和性别查询表格)
                 bmiCategory = getChildBMICategory(bmi, age, gender);
             }
+
+            // 保存数据到SharedPreferences
+            saveData(heightStr, weightStr, ageStr, gender);
+
+            // 保存历史记录，供可视化使用
+            saveBmiRecord(heightStr, weightStr, ageStr, gender, bmi, bmiCategory);
 
             // 创建Intent跳转到ReportActivity
             Intent intent = new Intent(MainActivity.this, ReportActivity.class);
@@ -251,5 +258,36 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("age", age);
         editor.putString("gender", gender.toLowerCase(Locale.ROOT));
         editor.apply();
+    }
+
+    /**
+     * 将当前 BMI 记录追加到历史记录中，避免可视化时无数据
+     */
+    private void saveBmiRecord(String height, String weight, String age, String gender, double bmi, String bmiCategory) {
+        try {
+            JSONArray history = new JSONArray(sharedPreferences.getString("bmi_history", "[]"));
+
+            JSONObject record = new JSONObject();
+            record.put("height", height);
+            record.put("weight", weight);
+            record.put("age", age);
+            record.put("gender", gender);
+            record.put("bmi", String.format(Locale.getDefault(), "%.2f", bmi));
+            record.put("category", bmiCategory);
+
+            // 最多保留最近 10 条记录
+            history.put(record);
+            if (history.length() > 10) {
+                JSONArray trimmed = new JSONArray();
+                for (int i = history.length() - 10; i < history.length(); i++) {
+                    trimmed.put(history.getJSONObject(i));
+                }
+                history = trimmed;
+            }
+
+            sharedPreferences.edit().putString("bmi_history", history.toString()).apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
