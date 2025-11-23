@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             double bmi = weight / (height * height);
+            String bmiFormatted = String.format(Locale.getDefault(), "%.2f", bmi);
 
             // 根据年龄选择不同的评判标准
             String bmiCategory;
@@ -138,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("weight", weightStr);
             intent.putExtra("age", ageStr);
             intent.putExtra("gender", gender);
-            intent.putExtra("bmi", String.valueOf(bmi));
+            intent.putExtra("bmi_value", bmi);
+            intent.putExtra("bmi_display", bmiFormatted);
             intent.putExtra("bmi_category", bmiCategory);
 
             // 启动Activity
