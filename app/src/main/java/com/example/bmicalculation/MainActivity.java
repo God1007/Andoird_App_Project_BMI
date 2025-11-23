@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 可以添加性别加载逻辑
         String savedGender = sharedPreferences.getString("gender", "male");
-        if (savedGender.equals("male")) {
+        if (savedGender.equalsIgnoreCase("male")) {
             genderRadioGroup.check(R.id.male_radio);
         } else {
             genderRadioGroup.check(R.id.female_radio);
@@ -80,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
     // 更新后的BMI计算方法
     private void calculateBMI() {
         // 获取输入的身高、体重、年龄
-        String heightStr = vHeight.getText().toString();
-        String weightStr = vWeight.getText().toString();
-        String ageStr = vAge.getText().toString();
+        String heightStr = vHeight.getText().toString().trim();
+        String weightStr = vWeight.getText().toString().trim();
+        String ageStr = vAge.getText().toString().trim();
 
         // 验证输入是否为空
         if (heightStr.isEmpty() || weightStr.isEmpty() || ageStr.isEmpty()) {
@@ -93,12 +94,21 @@ public class MainActivity extends AppCompatActivity {
         try {
             // 获取选择的性别
             int selectedGenderId = genderRadioGroup.getCheckedRadioButtonId();
+            if (selectedGenderId == -1) {
+                Toast.makeText(this, "plz choose gender", Toast.LENGTH_SHORT).show();
+                return;
+            }
             RadioButton selectedGenderRadio = findViewById(selectedGenderId);
             String gender = selectedGenderRadio.getText().toString();
 
             double height = Double.parseDouble(heightStr) / 100; // 转换为米
             double weight = Double.parseDouble(weightStr);
             int age = Integer.parseInt(ageStr);
+
+            if (height <= 0 || weight <= 0) {
+                Toast.makeText(this, "height & weight must be positive", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             double bmi = weight / (height * height);
 
@@ -239,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("height", height);
         editor.putString("weight", weight);
         editor.putString("age", age);
-        editor.putString("gender", gender);
+        editor.putString("gender", gender.toLowerCase(Locale.ROOT));
         editor.apply();
     }
 }
