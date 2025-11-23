@@ -102,7 +102,7 @@
         app:layout_constraintVertical_bias="0.852" />
 
     <Button
-        android:id="@+id/BMI_table_choice_button"
+        android:id="@+id/bmi_table_choice_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/judge_standard"
