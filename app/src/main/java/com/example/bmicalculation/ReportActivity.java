@@ -39,22 +39,23 @@ public class ReportActivity extends AppCompatActivity {
         String weightStr = bundle.getString("weight");
         String ageStr = bundle.getString("age");
         String gender = bundle.getString("gender");
-        String bmiValueStr = bundle.getString("bmi");
+        double bmiValue = bundle.getDouble("bmi_value", Double.NaN);
+        String bmiDisplay = bundle.getString("bmi_display");
         String bmiCategory = bundle.getString("bmi_category");
 
-        if (heightStr == null || weightStr == null || ageStr == null || gender == null || bmiValueStr == null || bmiCategory == null) {
+        if (heightStr == null || weightStr == null || ageStr == null || gender == null || bmiCategory == null || Double.isNaN(bmiValue)) {
             handleError("Missing data", "Please provide all required information", result, advice);
             return;
         }
 
         try {
-            double bmiValue = Double.parseDouble(bmiValueStr);
             int age = Integer.parseInt(ageStr);
 
             DecimalFormat nf = new DecimalFormat("0.00");
 
             // 显示BMI结果
-            result.setText("Your BMI: " + nf.format(bmiValue));
+            String bmiText = bmiDisplay != null ? bmiDisplay : nf.format(bmiValue);
+            result.setText("Your BMI: " + bmiText);
 
             // 显示BMI分类
             category.setText("Category: " + bmiCategory);
