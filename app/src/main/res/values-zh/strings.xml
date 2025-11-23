@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">BMI计算</string>
+    <string name="input_the_height_here">请输入身高。</string>
+    <string name="input_the_weight_here">请输入体重。</string>
+    <string name="weight_kg">体重(公斤)</string>
+    <string name="bmi_calculation">BMI计算</string>
+    <string name="see_ur_bmi">查看你的BMI</string>
+    <string name="height_cm">身高(厘米)</string>
+    <string name="bmi_result">你的BMI结果</string>
+    <string name="advice_average">保持良好状态！</string>
+    <string name="bmi_picture_for_adult">成人BMI图表</string>
+    <string name="judge_standard">判断标准</string>
+    <string name="adult_18_years_old"><![CDATA[成人(>18岁)]]></string>
+    <string name="child_18_years_old"><![CDATA[儿童(<=18岁)]]></string>
+    <string name="choose_the_identity_u_r">请选择身份</string>
+    <string name="age">年龄</string>
+    <string name="gender">性别</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="error_missing_fields">请填写身高、体重和年龄。</string>
+    <string name="error_choose_gender">请选择性别。</string>
+    <string name="error_positive">身高和体重必须为正数。</string>
+    <string name="error_number_format">请输入有效的数字。</string>
+    <string name="error_label">错误：%1$s</string>
+    <string name="menu_wiki">维基百科</string>
+    <string name="menu_exit">退出</string>
+    <string name="menu_header">操作</string>
+    <string name="report_bmi_value">你的BMI：%1$s</string>
+    <string name="report_category">分类：%1$s</string>
+    <string name="report_details">身高：%1$s 厘米
+体重：%2$s 公斤
+年龄：%3$s 岁
+性别：%4$s</string>
+    <string name="report_history_title">近期记录：</string>
+    <string name="report_no_history">暂无记录。</string>
+    <string name="view_trend">查看BMI趋势</string>
+    <string name="trend_title">BMI趋势</string>
+    <string name="trend_hint">每天最新的BMI将显示在这里。</string>
+    <string name="trend_empty">还没有BMI数据，先计算一次吧。</string>
+    <string name="back_to_report">返回</string>
+    <string name="llm_section_title">AI健康建议</string>
+    <string name="llm_loading">正在联系健康助手…</string>
+    <string name="llm_fallback">暂时无法获取AI建议，请参考上面的通用提示。</string>
+    <string name="llm_prompt_template">BMI：%1$.2f，年龄：%2$d，性别：%3$s</string>
+</resources>

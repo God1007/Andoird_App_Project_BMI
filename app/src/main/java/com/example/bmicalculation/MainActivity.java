@@ -2,6 +2,11 @@ package com.example.bmicalculation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.net.Uri;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -34,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         calculator = new BmiCalculator();
-        storage = new BmiHistoryStorage(getSharedPreferences("BMI_Data", MODE_PRIVATE));
+        storage = new BmiHistoryStorage(this);
 
         restoreForm();
         setListeners();
+        registerForContextMenu(binding.reportBtn);
     }
 
     private void setListeners() {
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, BMIPictureChoiceActivity.class));
             }
         });
+
+        binding.trendButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BmiTrendActivity.class)));
     }
 
     private void onCalculateClicked() {
@@ -62,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
         String ageText = binding.yearsold.getText().toString().trim();
 
         if (heightText.isEmpty() || weightText.isEmpty() || ageText.isEmpty()) {
-            Toast.makeText(this, "plz input the height, weight and years", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_missing_fields, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Gender gender = getSelectedGender();
         if (gender == null) {
-            Toast.makeText(this, "plz choose gender", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_choose_gender, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             int age = Integer.parseInt(ageText);
 
             if (heightCm <= 0 || weightKg <= 0) {
-                Toast.makeText(this, "height & weight must be positive", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_positive, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -98,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_BMI_CATEGORY, result.getCategory());
             startActivity(intent);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "input valid number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_number_format, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -123,5 +131,44 @@ public class MainActivity extends AppCompatActivity {
         } else {
             binding.maleRadio.setChecked(true);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_wiki) {
+            openWikipedia();
+            return true;
+        } else if (id == R.id.menu_exit) {
+            finishAffinity();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle(R.string.menu_header);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return onOptionsItemSelected(item);
+    }
+
+    private void openWikipedia() {
+        String language = getResources().getConfiguration().getLocales().get(0).getLanguage();
+        String localePrefix = language.startsWith("zh") ? "zh" : "en";
+        Uri wikiUri = Uri.parse("https://" + localePrefix + ".wikipedia.org/wiki/Body_mass_index");
+        startActivity(new Intent(Intent.ACTION_VIEW, wikiUri));
     }
 }
